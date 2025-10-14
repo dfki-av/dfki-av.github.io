@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Inpaint360GS: Efficient Object-Aware 3D Inpainting via Gaussian Splatting for 360° Scenes.">
+  <meta name="keywords" content="Inpaint360GS, 3DGS, Inpainting">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inpaint360GS: Efficient Object-Aware 3D Inpainting via Gaussian Splatting for 360° Scenes</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body);"></script>
+
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/tornado.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="./static/js/video_comparison.js"></script>
+  <script src="./static/js/app.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://shaoxiang777.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://shaoxiang777.github.io/project/uni-slam/">
+            Uni-SLAM
+          </a>
+          <a class="navbar-item" href="https://birdy666.github.io/projects/mikasa/">
+            MiKASA-3DVG
+          </a>
+         
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <!-- <div class="container is-max-desktop"> -->    
+    <div class="container is-fluid" style="max-width: 90%; margin: 0 auto;">
+
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- <h1 class="title is-1 publication-title neon-text" style="font-size:4em;">
+            <img src="static/images/tornado.png" alt="icon" style="height: 2em; vertical-align: middle; margin-right: 0.3em;">
+            Inpaint360GS
+          </h1> -->
+
+          <h1 class="title is-1 publication-title" style="font-size:4em;">
+            <img src="static/images/tornado.png"
+                alt="icon"
+                style="height: 1.2em; vertical-align: -0.2em; margin-right: 0.3em;">
+            <span class="brand-blue">Inpaint</span><span class="brand-360">360</span><span class="brand-blue">GS</span>
+          </h1>
+
+          <h2 class="subtitle is-3 publication-subtitle" style="font-size: 3em;">
+            <strong>Efficient Object-Aware 3D Inpainting via Gaussian Splatting for 360° Scenes</strong></h2>
+          <!-- <h3 class="subtitle is-3 publication-subtitle" style="font-size: 1.5em;">
+            <strong>CVPR 2026</strong></h3> -->
+          <div class="is-size-3 publication-authors">
+            <span class="author-block">
+              <a href="https://shaoxiang777.github.io/">Shaoxiang Wang</a><sup>1,2</sup>,
+            </span>
+            <span class="author-block"> 
+              <a href="https://www.linkedin.com/in/shihong-zhang-97861a293/">Shihong Zhang</a><sup>3</sup>,
+            </span>  
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=8p9OOd0AAAAJ&hl=en&oi=sra">Christen Millerdurai</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.professoren.tum.de/westermann-ruediger">Rüdiger Westermann</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.dfki.de/en/web/about-us/employee/person/dist01">Didier Stricker</a><sup>1,2</sup>
+            </span>
+            <span class="author-block">
+              <a href="https://www.dfki.de/en/web/about-us/employee/person/alpa02">Alain Pagani</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-3 publication-authors">
+            <span class="author-block"><sup>1</sup>German Research Center for Artificial Intelligence(DFKI),</span>
+            <span class="author-block"><sup>2</sup>RTPU,</span>
+            <span class="author-block"><sup>3</sup>Technical University of Munich</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="https://shaoxiang777.github.io/project/uni-slam/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/dfki-av/Inpaint360GS"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Google Drive Link. -->
+              <span class="link-block">
+                <a href="https://shaoxiang777.github.io/project/uni-slam/"
+                   class="external-link button is-normal is-rounded is-dark">
+                   <span class="icon">
+                    <img src="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" width="20" height="20" alt="Google Drive">
+                  </span>
+                  <span>Data (Google Drive)</span>
+                  </a>
+              </span>
+              <!-- Dataset HF Link. -->
+              <span class="link-block">
+                <a href="https://shaoxiang777.github.io/project/uni-slam/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" width="20" height="20" alt="HF">
+                  </span>
+                  <span>Data (HF)</span>
+                  </a>
+              </span>
+              <!-- Results Link. -->
+              <span class="link-block">
+                <a href="https://shaoxiang777.github.io/project/uni-slam/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Evaluation Results</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="pipeline-figure">
+        <video autoplay muted loop playsinline controls style="width: 80%; margin-left: 80px; border-radius: 10px;">
+          <source src="./videos/intro_video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <h2 class="subtitle is-3 has-text-centered">
+        <span class="subtitle is-3 "><strong>Inpaint360GS</strong></span> can perform flexible object-aware inpainting in a 360° unbounded scene.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="pipeline-figure" style="display: flex; justify-content: center;">
+        <video autoplay muted loop playsinline controls style="width: 80%; max-width: 600px; border-radius: 10px;">
+          <source src="./videos/intro_video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <h2 class="subtitle is-3 has-text-centered">
+        <span class="subtitle is-3"><strong>Inpaint360GS</strong></span> can perform flexible object-aware inpainting in a 360° unbounded scene.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small has-text-centered">
+  <div class="hero-body">
+    <!-- <div class="container"> -->
+    <div class="container is-fluid">
+      <h2 class="title is-3">Inpainting Results of Our <span class="dnerf">Inpaint360GS</span> Dataset & <span class="dnerf">kitchen, bear</span> Scenes </h2>
+      <div id="results-carousel" class="carousel results-carousel"
+            style="max-width:60%; margin:0 auto;">     
+        
+
+        <div class="item item-cube">
+          <video poster="" id="cube" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/cube.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-doppelherz">
+          <video poster="" id="doppelherz" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/doppelherz.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-fruits">
+          <video poster="" id="fruits" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/fruits.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-truck">
+          <video poster="" id="truck" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/truck.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-garden_toys">
+          <video poster="" id="garden_toys" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/garden_toys.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-redbull">
+          <video poster="" id="redbull" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/redbull.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-toys">
+          <video poster="" id="toys" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/toys.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-bag">
+          <video poster="" id="bag" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/bag.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-cone_yellow">
+          <video poster="" id="cone_yellow" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/cone_yellow.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-cone_red">
+          <video poster="" id="cone_red" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/cone_red.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        
+        <div class="item item-car">
+          <video poster="" id="car" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/car.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-kitchen">
+          <video poster="" id="kitchen" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/kitchen.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+        <div class="item item-bear">
+          <video poster="" id="bear" autoplay controls muted loop playsinline >
+            <source src="./videos/teaser/bear.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Video</h2>
+        <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px;">
+          <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px;" src="https://www.youtube.com/embed/aUcnv_4FQYE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <hr>
+
+        <h2 class="title is-2">Abstract</h2>
+        <div class="content has-text-justified">
+          
+          <p>
+            Despite recent advances in single-object front-facing
+            inpainting using NeRF and 3D Gaussian Splatting
+            (3DGS), inpainting in complex 360° scenes remains
+            largely underexplored. This is primarily due to three key
+            challenges: (i) identifying target objects in the 3D field
+            of 360° environments, (ii) dealing with severe occlusions
+            in multi-object scenes, which makes it hard to define
+            regions to inpaint, and (iii) maintaining consistent and
+            high-quality appearance across views effectively.
+          </p>
+          <p>
+            To tackle these challenges, we propose Inpaint360GS,
+            a flexible 360° editing framework based on 3DGS that
+            supports multi-object removal and high-fidelity inpainting
+            in 3D space. By distilling 2D segmentation into 3D and
+            leveraging virtual camera views for contextual guidance,
+            our method enables accurate object-level editing and
+            consistent scene completion. We further introduce a new
+            dataset tailored for 360° inpainting, addressing the lack of
+            ground truth object-free scenes. Experiments demonstrate
+            that Inpaint360GS outperforms existing baselines and
+            achieves state-of-the-art performance. 
+          <p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+
+    <!-- Pipeline Fig. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Pipeline</h2>
+        <div class="pipeline-figure">
+          <img src="./static/images/pipeline.png" alt="Pipeline" style="width: 100%; margin-left: 10px;"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            <strong> Inpaint360GS </strong> begins with RGB images to build a Gaussian Radiance Field(GRF) and obtain per-view masks from a 
+            segmentation model. We then associate these masks across views to get reasonably consistent object IDs for the Gaussians. This 
+            object-aware GRF enables direct possible 3D object manipulation, such as click-based or prompt-based removal. After removing 
+            target objects, we render at novel camera poses to obtain virtual views <span class="math">\( \mathcal{V} \)</span>. During 2D 
+            inpainting, we recursively perform conditional RGB and depth inpainting, which is then used for depth-guided 3D inpainting.
+          </p>
+        </div>
+      </div>
+    </div>
+  
+
+  </div>
+</section>
+
+
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+   
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Visualization Results </h2>
+      </div>
+    </div>
+
+        <p class="text-justify" style="text-align: left;">
+        <div class="content has-text-justified">
+            We compare our rendering results with other approaches. Our method is capable of handling not only <strong>single-object (2. and 3. rows)</strong> cases but also complex <strong>multi-object (1. row)</strong> scenes with challenging occlusions.
+            In addition, we primarily benchmark against other mainstream GS-based methods, and report FID values in the middle of the video to enable quantitative comparison.
+        </div>
+
+        
+          <div id="single-image-compare">
+            <div class="row m-2">
+              <div class="col-md-10">
+                  <ul class="nav nav-pills justify-content-center" role="navigation">
+                      <li class="nav-item">
+                          <a class="nav-link disabled" 
+                              style="width: 270px; pointer-events:none; cursor:default;">
+                              <strong>Comparison method:</strong>
+                          </a>
+                      </li>
+                      <li class="nav-item method-pill" data-value="aurafusion360"><a class="nav-link active">AuraFusion360 </a></li>
+                      <li class="nav-item method-pill" data-value="gscream"><a class="nav-link">GScream </a></li>
+                      <li class="nav-item method-pill" data-value="gaussiangrouping"><a class="nav-link">Gaussian Grouping </a></li>
+                     
+                  </ul>
+              </div>
+
+              <div class="btn-group btn-group-sm col-md-2 d-flex align-items-center" style="padding-top: 5px" id="mode-buttons">
+                  <!-- <button class="btn btn-primary mode-pill float-right active" data-value="rgb">
+                      RGB
+                  </button>
+                  <button class="btn btn-primary mode-pill float-right" data-value="depth">
+                      Depth
+                  </button> -->
+              </div>
+          </div>
+
+
+
+            <!-- <div class="text-center">
+              <div class="video-container d-flex justify-content-center align-items-center p-0">
+                <video class="video" id="single-comp-left" loop playsinline autoplay muted onplay="resizeAndPlay(this)">
+                </video>
+                <canvas height="0" class="videoMerge" id="single-comp-leftMerge" style="width: 80%;"></canvas>
+        
+                
+                左下角标签（方法名）
+                <span id="single-comp-label-left" 
+                      style="position:absolute; bottom:10px; left:100px; font-weight:bold; 
+                            color:white; background:rgba(0,0,0,0.5); 
+                            padding:5px 10px; border-radius:6px; font-size:20px;">
+                </span>
+
+                右下角标签（固定 Ours）
+                <span id="single-comp-label-right" 
+                      style="position:absolute; bottom:10px; right:100px; font-weight:bold; 
+                            color:white; background:rgba(0,0,0,0.5); 
+                            padding:5px 10px; border-radius:6px; font-size:20px;">
+                  Ours
+                </span>
+
+              </div>
+            </div> -->
+
+
+            <div class="text-center">
+              <div class="video-container d-flex justify-content-center align-items-center p-0" style="position: relative; display: inline-block; width: 80%; max-width: 900px;">
+                <video class="video" id="single-comp-left" loop playsinline autoplay muted onplay="resizeAndPlay(this)" style="width:100%; height:auto;">
+                </video>
+                <canvas height="0" class="videoMerge" id="single-comp-leftMerge" style="width:100%;"></canvas>
+
+                <span id="single-comp-label-left"></span>
+                <span id="single-comp-label-right">Ours</span>
+
+              </div>
+            </div>
+
+
+
+
+
+            <div class="text-center">
+              <div class="pill-row scene-pills" id="any-pills" role="group" aria-relevant="additions text">
+                  <div class="pill scene-pill" data-value="fruits">
+                      <img class="thumbnail-img" src="thumbnails/multi_object/fruits.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="toys">
+                      <img class="thumbnail-img" src="thumbnails/multi_object/toys.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="garden_toys">
+                      <img class="thumbnail-img" src="thumbnails/multi_object/garden_toys.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="doppelherz">
+                      <img class="thumbnail-img" src="thumbnails/multi_object/doppelherz.JPG" width="200">
+                  </div>
+
+
+
+                  <br>  <!-- break to second line -->
+
+                  <div class="pill scene-pill" data-value="kitchen">
+                      <img class="thumbnail-img" src="thumbnails/single_object/kitchen.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="car">
+                      <img class="thumbnail-img" src="thumbnails/single_object/car.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="cone_red">
+                      <img class="thumbnail-img" src="thumbnails/single_object/cone_red.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="cone_yellow">
+                      <img class="thumbnail-img" src="thumbnails/single_object/cone_yellow.JPG" width="200">
+                  </div>
+
+                  <br>  <!-- break to second line -->
+
+                  <div class="pill scene-pill" data-value="cube">
+                      <img class="thumbnail-img" src="thumbnails/single_object/cube.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="redbull">
+                      <img class="thumbnail-img" src="thumbnails/single_object/redbull.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="truck">
+                      <img class="thumbnail-img" src="thumbnails/single_object/truck.JPG" width="200">
+                  </div>
+
+                  <div class="pill scene-pill" data-value="bag">
+                      <img class="thumbnail-img" src="thumbnails/single_object/bag.JPG" width="200">
+                  </div>
+                  
+              </div>
+            </div>
+      
+          </div>
+        
+
+        <script>
+            playbackSpeeds = {
+                "aurafusion360": [1.0, 1.0],
+                "gscream": [1.0, 1.0],
+                "gaussiangrouping": [1.0, 1.0],
+               
+            };
+
+            aspectRatios = {
+                "aurafusion360": 1.5,
+                "gscream": 1.5,
+                "gaussiangrouping": 1.5,
+            }
+
+            labels = {
+                "aurafusion360": "AuraFusion360",
+                "gscream": "GScream",
+                "gaussiangrouping": "Gaussian Grouping",
+            }
+
+            compareDiv = document.querySelector("#single-image-compare")
+            activeMethod = "aurafusion360"
+            activeScene = "kitchen"
+            activeMode = "rgb"
+
+            // Select all elements with the class 'method-pill'
+            const methodPills_base = compareDiv.querySelectorAll('.method-pill');
+            const modePillParent_base = compareDiv.querySelector('#mode-buttons')
+            const modePills_base = modePillParent_base.querySelectorAll('.mode-pill')
+
+            for (modePill of modePills_base) {
+                modePill.addEventListener('click', function () {
+                    // activeMode = this.getAttribute('data-value');
+                    activeMode = 'rgb'
+                    updateDisplay();
+                });
+            }
+
+
+            const videoParent_base = compareDiv.querySelector(".video-container");
+            const leftVideo_base = videoParent_base.querySelector('#single-comp-left')
+            const leftLabel_base = videoParent_base.querySelector("#single-comp-label-left")
+            // const rightVideo = videoParent_base.querySelector('#single-comp-right')
+            const scenePillContainers_base = compareDiv.querySelectorAll(`.scene-pills`);
+
+            for (methodPill of methodPills_base) {
+                const method = methodPill.getAttribute('data-value');
+                // Select all scene pill containers
+                const scenePillContainer = compareDiv.querySelector(`#any-pills`);
+                const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                for (scenePill of scenePills) {
+                    scenePill.addEventListener('click', function () {
+                        activeScene = this.getAttribute("data-value")
+                        console.log(activeScene);
+                        updateDisplay();
+                    });
+                }
+
+                // Attach a click event listener to each pill
+                methodPill.addEventListener('click', function () {
+                    activeMethod = method
+                    activeMode = "rgb"
+                    // const scenePillContainer = compareDiv.querySelector(`#any-pills`);
+                    // const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+                    // activeScene = scenePills[0].getAttribute("data-value")
+                    updateDisplay();
+                });
+            }
+
+            function updateDisplay() {
+                if (activeMethod == 'image_dream') {
+                    modePillParent_base.style.display = 'none';
+                } else {
+                    modePillParent_base.style.display = '';
+                }
+                // Update active pill
+                methodPills_base.forEach(p => p.classList.remove('active'));
+                methodPills_base.forEach(methodPill => {
+                    if (methodPill.getAttribute('data-value') == activeMethod) {
+                        methodPill.querySelector('a').classList.add('active');
+                    } else {
+                        methodPill.querySelector('a').classList.remove('active')
+                    }
+                });
+
+                // Update mode pill
+                for (modePill of modePills_base) {
+                    if (modePill.getAttribute('data-value') === activeMode) {
+                        modePill.classList.add('active');
+                    } else {
+                        modePill.classList.remove('active');
+                    }
+                }
+
+                // Show/Hide scene pill containers based on the selected method
+                scenePillContainers_base.forEach(container => {
+                    if (container.id === `any-pills`) {
+                        container.style.display = ''; // Or 'block' depending on your layout
+                    } else {
+                        container.style.display = 'none';
+                    }
+                });
+
+                const scenePillContainer = compareDiv.querySelector(`#any-pills`);
+                const scenePills = scenePillContainer.querySelectorAll(".scene-pill")
+
+                for (scenePill of scenePills) {
+                    if (scenePill.getAttribute('data-value') == activeScene) {
+                        scenePill.classList.add('active');
+                    } else {
+                        scenePill.classList.remove('active')
+                    }
+                }
+
+                var zdist = "";
+                if (activeMode == "depth") {
+                    zdist = "_zdist";
+                }
+
+                // Update video display. This still has a small flash, could double buffer the video like before, but
+                // as long as the layout stays consistent it really isn't bad.
+      
+                leftVideo_base.src = `videos/comparison_slider/${activeMethod}/${activeScene}.mp4`;
+
+                var [lr, rr] = playbackSpeeds[activeMethod];
+                leftVideo_base.playbackRate = lr;
+                // rightVideo.playbackRate = rr;
+
+                videoParent_base.style.aspectRatio = aspectRatios[activeMethod] * 2.0;
+
+                console.log(leftLabel_base)
+                console.log(leftLabel_base.innerHTML)
+
+                leftLabel_base.innerHTML = labels[activeMethod];
+            }
+            // Update initial display
+            updateDisplay()
+        </script>
+            
+
+      </div>   
+    </div>        
+      
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Dataset Comparison -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Dataset Comparison</h2>
+        <p class="content has-text-justified">
+          We provide a new 360° high-quality dataset, <span class="dnerf">Inpaint360GS</span>, which can be used for quantitative evaluation of object removal in inpainting tasks.
+          All points corresponding to the inpainting (test) views in the sparse point cloud from COLMAP have been properly removed for fair evaluation.
+          The dataset includes <span style="color: green;">4 multi-object</span> scenes and <span style="color: green;">7 single-object</span> scenes.
+        </p>
+        <img src="./static/images/dataset_details.jpg" alt="Quantitative" style="width: 100%;"/> 
+       
+      </div>
+    </div>    
+    
+    <!-- Poster -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Poster</h2>
+        <embed src="./static/images/inpaint360gs.pdf" type="application/pdf" width="100%" height="600px" />
+      </div>
+    </div> -->
+
+  </div> 
+</section>
+
+
+
+
+<section class="section" style="width: 85%; margin: 0 auto">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2
+          class="title is-2"
+          style="text-align: center; padding-bottom: 10px"
+        >
+        Quantitative Comparisons
+        </h2>
+        <div
+          class="slideshow-container"
+          style="width: 80%; margin-top: 20px"
+        >
+          <div class="mySlides0">
+            <div class="card">
+              <div style="flex: 1; text-align: center;">
+                <div style="flex: 1;">
+                  <p style="font-size: 18px; line-height: 1.8; margin-bottom: 5px;">
+                    <strong>Inpainting quality comparison on <span class="dnerf">Inpaint360GS</span> dataset.</strong> <br>
+                    Inpaint360GS largely outperforms previous SOTA methods specifically on multi-object scenarios. <br>
+                  </p>
+                  <img
+                    src="./static/images/comp_model_fid.png"
+                    alt="comparison_model_fid"
+                    style="margin-top: 0px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides0">
+            <div class="card">
+              <div style="flex: 1; text-align: center;">
+                <div style="flex: 1;">
+                  <p style="font-size: 18px; line-height: 1.8; margin-bottom: 5px;">
+                    <strong>Average run time comparison on <span class="dnerf">bear</span> and <span class="dnerf">kitchen</span> scenes.</strong> <br>
+                    Inpaint360GS achieves the lowest training and editing among all methods.
+                  </p>
+                  <img
+                    src="./static/images/comp_run_time.png"
+                    alt="comparison_run_time"
+                    style="margin-top: 0px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mySlides0">
+            <div class="card">
+              <div style="flex: 1; text-align: center;">
+                <div style="flex: 1;">
+                  <p style="font-size: 18px; line-height: 1.8; margin-bottom: 5px;">
+                    <strong>Average model size comparison on <span class="dnerf">bear</span> and <span class="dnerf">kitchen</span> scenes.</strong> <br>
+                    Using the same 3DGS representation, our two-stage method requires significantly <br> less storage than one-stage method GauGroup.
+                  </p>
+                  <img
+                    src="./static/images/comp_model_size.png"
+                    alt="comparison_model_size"
+                    style="margin-top: 0px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next and previous buttons -->
+          <span class="prev" onclick="plusSlides(0, -1)">&#10094;</span>
+          <span class="next" onclick="plusSlides(0, 1)">&#10095;</span>
+        </div>
+        <br />
+
+        <!-- The dots/circles -->
+        <div style="text-align: center">
+          <span class="dot0" onclick="currentSlide(0, 1)"></span>
+          <span class="dot0" onclick="currentSlide(0, 2)"></span>
+          <span class="dot0" onclick="currentSlide(0, 3)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  
+  <div class="container is-max-desktop">
+    
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@inproceedings{wang2025uni,
+        title={Uni-slam: Uncertainty-aware neural implicit slam for real-time dense indoor scene reconstruction},
+        author={Wang, Shaoxiang and Xie, Yaxu and Chang, Chun-Peng and Millerdurai, Christen and Pagani, Alain and Stricker, Didier},
+        booktitle={2025 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+        pages={2228--2239},
+        year={2025},
+        organization={IEEE}
+      }</code></pre>
+    </div>
+      
+    <!-- Acknowledgements -->
+    <div class="container is-max-desktop content">
+      <h2 class="title">Acknowledgements</h2>
+      This work has been partially supported by the EU projects CORTEX2 (GA No.  101070192) and LUMINOUS (GA No. 101135724), as well as by the German Research Foundation (DFG, GA No. 564809505).
+      We sincerely thank
+      <a href="https://arxiv.org/abs/2312.00732">GauGroup</a>, 
+      <a href="https://arxiv.org/abs/2404.07977">Gaga</a>,
+      <a href="https://arxiv.org/abs/2404.11613">Infusion</a> for their excellent work</a>!
+    </div>
+      
+  </div>
+</section>
+
+
+
+
+<!-- Javascript Functions --> 
+<script type="text/javascript">
+  let slideIndex = [1];
+  let slideId = 0;
+  showSlides(slideId, slideIndex[slideId]);
+
+  // Next/previous controls
+  function plusSlides(id, n) {
+    showSlides(id, (slideIndex[id] += n));
+  }
+
+  // Thumbnail image controls
+  function currentSlide(id, n) {
+    showSlides(id, (slideIndex[id] = n));
+  }
+
+  function showSlides(id, n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides" + id);
+    let dots = document.getElementsByClassName("dot" + id);
+    if (n > slides.length) {
+      slideIndex[id] = 1;
+    }
+    if (n < 1) {
+      slideIndex[id] = slides.length;
+    }
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex[id] - 1].style.display = "block";
+    dots[slideIndex[id] - 1].className += " active";
+  }
+
+  // Automatic slideshow
+  setInterval(() => {
+    plusSlides(0, 1);
+  }, 150000); // Change image every 5 seconds
+</script>
+
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://arxiv.org/abs/2412.00242">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://shaoxiang777.github.io/" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+            Our project page is built upon <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a>, <a href="https://dorverbin.github.io/refnerf">Ref-NeRF</a>, <a href="https://noposplat.github.io/">NoPoSplat</a> and <a href="https://zju3dv.github.io/free360/">Free360</a>.
+            Our logo was built by <a href="https://www.flaticon.com/free-icon/tornado_491195?term=tornado&page=1&position=28&origin=search&related_id=491195" title="great icons">Freepik-Flaticon</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
