@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="S0KA4ZX9ah0zyzbKDrIaWTyXN75Qyra7mGosFQk9ok8" />
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="ReLaGS: Relational Language Gaussian Splatting">
+  <meta property="og:description" content="Project page for ReLaGS: Relational Language Gaussian Splatting, a novel framework for unified 3D perception and reasoning across tasks such as segmentation, retrieval, and relation understanding.">
+  <meta name="keywords" content="ReLaGS, 3DGS, Language Gaussian Splatting, 3D Scene Understanding, Open Vocabulary, Computer Vision">
+
+
+  <title>ReLaGS: Relational Language Gaussian Splatting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --text: #1a1a18;
+      --muted: #6b6b65;
+      --accent: #1a3a5c;
+      --accent-light: #e8eef5;
+      --border: #ddddd8;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+    }
+
+    .venue {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: 1px solid #c5d4e3;
+      border-radius: 3px;
+      padding: 4px 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      max-width: 780px;
+      margin: 0 auto 2rem;
+      color: var(--text);
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .authors {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.9;
+    }
+
+    .authors a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .authors a:hover { border-color: var(--accent); }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--surface);
+      border: 1px solid #c5d4e3;
+      border-radius: 4px;
+      padding: 7px 16px;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── Main content ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Teaser ── */
+    .teaser-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      margin-bottom: 0;
+    }
+
+    .teaser-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── Teaser ── */
+    .teaser-caption {
+      margin-top: 1rem;
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* ── Section ── */
+    .section-label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .abstract-text {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text);
+      max-width: 740px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── BibTeX ── */
+    pre {
+      background: #f0efe9;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 1.25rem 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      overflow-x: auto;
+      color: #2e2e2a;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="venue">CVPR 2026</div>
+  <h1>ReLaGS: <em>Relational Language</em> Gaussian Splatting</h1>
+  <p class="authors">
+    <a href="https://scholar.google.com/citations?user=3ZKuh9EAAAAJ&hl=en">Yaxu Xie</a><sup>1,2*</sup> &thinsp;&middot;&thinsp;
+    <a href="https://abdallaarafa.github.io/">Abdalla Arafa</a><sup>1,2*</sup> &thinsp;&middot;&thinsp;
+    <a href="https://scholar.google.com/citations?user=SR_4n3kAAAAJ&hl=en">Alireza Javanmardi</a><sup>1</sup> &thinsp;&middot;&thinsp;
+    <a href="https://chris10m.github.io/">Christen Millerdurai</a><sup>1</sup> &thinsp;&middot;&thinsp;
+    <a href="https://scholar.google.com/citations?user=KxUF6BUAAAAJ&hl=it">Jia Cheng Hu</a><sup>3</sup> &thinsp;&middot;&thinsp;
+    <a href="https://shaoxiang777.github.io/">Shaoxiang Wang</a><sup>1,2</sup> &thinsp;&middot;&thinsp;
+    <a href="https://www.dfki.de/en/web/about-us/employee/person/alpa02">Alain Pagani</a><sup>1</sup> &thinsp;&middot;&thinsp;
+    <a href="https://www.dfki.de/en/web/about-us/employee/person/dist01">Didier Stricker</a><sup>1,2</sup>
+  </p>
+  <p style="font-size: 13px; color: var(--muted); margin: 0 auto 0.5rem; max-width: 700px;">
+    <sup>*</sup>Equal contribution
+  </p>
+  <p style="font-size: 13px; color: var(--muted); margin: 0 auto 2rem; max-width: 700px; line-height: 1.8;">
+    <sup>1</sup> German Research Center for Artificial Intelligence (DFKI) &ensp;
+    <sup>2</sup> RPTU University Kaiserslautern-Landau &ensp;
+    <sup>3</sup> University of Modena and Reggio Emilia
+  </p>
+  <div class="links">
+    <a class="btn" href="https://arxiv.org/pdf/2603.17605">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Paper
+    </a>
+    <a class="btn" href="https://arxiv.org/pdf/2603.17605">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      arXiv
+    </a>
+    <a class="btn" href="https://github.com/dfki-av/ReLaGS">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      Code (coming soon)
+    </a>
+  </div>
+</header>
+
+<section class="teaser-section">
+  <div class="teaser-inner">
+    <img src="assets/images/teaser.jpg" alt="ReLaGS Teaser" style="width: 100%; display: block; border-radius: 6px;" />
+    <p class="teaser-caption"><strong>Relational Language Gaussian Splatting.</strong> We build a platform with multi-hierarchical language Gaussian field and open-vocabulary 3D scene graph, to support various tasks such as object selection via click, open vocabulary 3D object segmentation across semantic granularity, spatial relationship reasoning between objects and querying object with relation-guidance.</p>
+  </div>
+</section>
+
+<main>
+
+  <!-- Abstract -->
+  <p class="section-label">Abstract</p>
+  <p class="abstract-text">
+    Achieving unified 3D perception and reasoning across tasks such as segmentation, retrieval, and relation understanding remains challenging, as existing methods are either object-centric or rely on costly training for inter-object reasoning. We present a novel framework that constructs a hierarchical language-distilled Gaussian scene and its 3D semantic scene graph without scene-specific training. A Gaussian pruning mechanism refines scene geometry, while a robust multi-view language alignment strategy aggregates noisy 2D features into accurate 3D object embeddings. On top of this hierarchy, we build an open-vocabulary 3D scene graph with Vision Language-derived annotations and Graph Neural Network-based relational reasoning. Our approach enables efficient and scalable open-vocabulary 3D reasoning by jointly modeling hierarchical semantics and inter/intra-object relationships, validated across tasks including open-vocabulary segmentation, scene graph generation, and relation-guided retrieval.
+  </p>
+
+  <hr class="divider" />
+
+  <!-- BibTeX -->
+  <p class="section-label">Citation</p>
+  <pre>@inproceedings{xiearafa2026relags,
+  title     = {ReLaGS: Relational Language Gaussian Splatting},
+  author    = {Xie, Yaxu and Arafa, Abdalla and Javanmardi, Alireza and
+               Millerdurai, Christen and Hu, Jia Cheng and Wang, Shaoxiang and
+               Pagani, Alain and Stricker, Didier},
+  booktitle = {CVPR},
+  year      = {2026}
+}</pre>
+
+<hr class="divider" />
+
+  <!-- Acknowledgements -->
+  <p class="section-label">Acknowledgements</p>
+  <p class="abstract-text">
+    This work has been partially funded by the EU projects dAIEDGE (GA Nr 101120726) and LUMINOUS (GA Nr 101135724).
+  </p>
+
+
+
+</main>
+
+<footer>
+  ReLaGS &middot; CVPR 2026
+</footer>
+
+</body>
+</html>
