@@ -1,288 +1,712 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="S0KA4ZX9ah0zyzbKDrIaWTyXN75Qyra7mGosFQk9ok8" />
+  <meta charset="utf-8">
+  <meta name="google-site-verification" content="S0KA4ZX9ah0zyzbKDrIaWTyXN75Qyra7mGosFQk9ok8">
+
+
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="ReLaGS: Relational Language Gaussian Splatting">
   <meta property="og:description" content="Project page for ReLaGS: Relational Language Gaussian Splatting, a novel framework for unified 3D perception and reasoning across tasks such as segmentation, retrieval, and relation understanding.">
   <meta name="keywords" content="ReLaGS, 3DGS, Language Gaussian Splatting, 3D Scene Understanding, Open Vocabulary, Computer Vision">
-
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ReLaGS: Relational Language Gaussian Splatting</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #f7f6f2;
-      --surface: #ffffff;
-      --text: #1a1a18;
-      --muted: #6b6b65;
-      --accent: #1a3a5c;
-      --accent-light: #e8eef5;
-      --border: #ddddd8;
-      --serif: 'Source Serif 4', Georgia, serif;
-      --sans: 'DM Sans', system-ui, sans-serif;
-    }
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JKTYVE19MB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 16px;
-      line-height: 1.7;
-    }
+    gtag('config', 'G-JKTYVE19MB');
+  </script>
 
-    /* ── Header ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 3.5rem 1.5rem 3rem;
-      text-align: center;
-    }
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
 
-    .venue {
-      display: inline-block;
-      font-family: var(--sans);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: var(--accent-light);
-      border: 1px solid #c5d4e3;
-      border-radius: 3px;
-      padding: 4px 12px;
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-family: var(--serif);
-      font-size: clamp(1.9rem, 4vw, 2.9rem);
-      font-weight: 300;
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-      max-width: 780px;
-      margin: 0 auto 2rem;
-      color: var(--text);
-    }
-
-    h1 em {
-      font-style: italic;
-      font-weight: 300;
-    }
-
-    .authors {
-      font-family: var(--sans);
-      font-size: 15px;
-      color: var(--muted);
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      line-height: 1.9;
-    }
-
-    .authors a {
-      color: var(--accent);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
-    }
-
-    .authors a:hover { border-color: var(--accent); }
-
-    .links {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--accent);
-      background: var(--surface);
-      border: 1px solid #c5d4e3;
-      border-radius: 4px;
-      padding: 7px 16px;
-      text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .btn:hover {
-      background: var(--accent-light);
-      border-color: var(--accent);
-    }
-
-    .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-    /* ── Main content ── */
-    main {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 5rem;
-    }
-
-    /* ── Teaser ── */
-    .teaser-section {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 2.5rem 1.5rem;
-      margin-bottom: 0;
-    }
-
-    .teaser-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    /* ── Teaser ── */
-    .teaser-caption {
-      margin-top: 1rem;
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-      text-align: center;
-    }
-
-    /* ── Section ── */
-    .section-label {
-      font-family: var(--sans);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .abstract-text {
-      font-family: var(--serif);
-      font-size: 17px;
-      font-weight: 300;
-      line-height: 1.8;
-      color: var(--text);
-      max-width: 740px;
-    }
-
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 3rem 0;
-    }
-
-    /* ── BibTeX ── */
-    pre {
-      background: #f0efe9;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 1.25rem 1.5rem;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      line-height: 1.65;
-      overflow-x: auto;
-      color: #2e2e2a;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 13px;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="./static/js/tabs.js"></script>
+  <script src="./static/js/runtime.js" defer></script>
 </head>
 <body>
 
-<header>
-  <div class="venue">CVPR 2026</div>
-  <h1>ReLaGS: <em>Relational Language</em> Gaussian Splatting</h1>
-  <p class="authors">
-    <a href="https://scholar.google.com/citations?user=3ZKuh9EAAAAJ&hl=en">Yaxu Xie</a><sup>1,2*</sup> &thinsp;&middot;&thinsp;
-    <a href="https://abdallaarafa.github.io/">Abdalla Arafa</a><sup>1,2*</sup> &thinsp;&middot;&thinsp;
-    <a href="https://scholar.google.com/citations?user=SR_4n3kAAAAJ&hl=en">Alireza Javanmardi</a><sup>1</sup> &thinsp;&middot;&thinsp;
-    <a href="https://chris10m.github.io/">Christen Millerdurai</a><sup>1</sup> &thinsp;&middot;&thinsp;
-    <a href="https://scholar.google.com/citations?user=KxUF6BUAAAAJ&hl=it">Jia Cheng Hu</a><sup>3</sup> &thinsp;&middot;&thinsp;
-    <a href="https://shaoxiang777.github.io/">Shaoxiang Wang</a><sup>1,2</sup> &thinsp;&middot;&thinsp;
-    <a href="https://www.dfki.de/en/web/about-us/employee/person/alpa02">Alain Pagani</a><sup>1</sup> &thinsp;&middot;&thinsp;
-    <a href="https://www.dfki.de/en/web/about-us/employee/person/dist01">Didier Stricker</a><sup>1,2</sup>
-  </p>
-  <p style="font-size: 13px; color: var(--muted); margin: 0 auto 0.5rem; max-width: 700px;">
-    <sup>*</sup>Equal contribution
-  </p>
-  <p style="font-size: 13px; color: var(--muted); margin: 0 auto 2rem; max-width: 700px; line-height: 1.8;">
-    <sup>1</sup> German Research Center for Artificial Intelligence (DFKI) &ensp;
-    <sup>2</sup> RPTU University Kaiserslautern-Landau &ensp;
-    <sup>3</sup> University of Modena and Reggio Emilia
-  </p>
-  <div class="links">
-    <a class="btn" href="https://arxiv.org/pdf/2603.17605">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Paper
-    </a>
-    <a class="btn" href="https://arxiv.org/pdf/2603.17605">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      arXiv
-    </a>
-    <a class="btn" href="https://github.com/dfki-av/ReLaGS">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-      Code (coming soon)
-    </a>
-  </div>
-</header>
 
-<section class="teaser-section">
-  <div class="teaser-inner">
-    <img src="assets/images/teaser.jpg" alt="ReLaGS Teaser" style="width: 100%; display: block; border-radius: 6px;" />
-    <p class="teaser-caption"><strong>Relational Language Gaussian Splatting.</strong> We build a platform with multi-hierarchical language Gaussian field and open-vocabulary 3D scene graph, to support various tasks such as object selection via click, open vocabulary 3D object segmentation across semantic granularity, spatial relationship reasoning between objects and querying object with relation-guidance.</p>
+<!-- =====================================================
+     HERO
+===================================================== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+
+          <h1 class="title is-1 publication-title">ReLaGS: Relational Language Gaussian Splatting</h1>
+          <h1 style="font-size:1.5rem">CVPR 2026</h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=3ZKuh9EAAAAJ&hl=en">Yaxu Xie</a><sup>1*</sup>,</span>
+            <span class="author-block"><a href="https://abdallaarafa.github.io/">Abdalla Arafa</a><sup>1,2*</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=SR_4n3kAAAAJ&hl=en">Alireza Javanmardi</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://chris10m.github.io/">Christen Millerdurai</a><sup>2</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=KxUF6BUAAAAJ&hl=it">Jia Cheng Hu</a><sup>3</sup>,</span>
+            <span class="author-block"><a href="https://shaoxiang777.github.io/">Shaoxiang Wang</a><sup>1,2</sup>,</span>
+            <span class="author-block"><a href="https://www.dfki.de/en/web/about-us/employee/person/alpa02">Alain Pagani</a><sup>1</sup></span>
+            <span class="author-block"><a href="https://www.dfki.de/en/web/about-us/employee/person/dist01">Didier Stricker</a><sup>1,2</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <sup>*</sup> Equal contribution
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>German Research Center for Artificial Intelligence (DFKI),</span>
+            <span class="author-block"><sup>2</sup> RPTU Kaiserslautern-Landau,</span>
+            <span class="author-block"><sup>3</sup> University of Modena and Reggio Emilia</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2603.17605" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2603.17605" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/dfki-av/ReLaGS" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code (Coming soon)</span>
+                </a>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<main>
 
-  <!-- Abstract -->
-  <p class="section-label">Abstract</p>
-  <p class="abstract-text">
-    Achieving unified 3D perception and reasoning across tasks such as segmentation, retrieval, and relation understanding remains challenging, as existing methods are either object-centric or rely on costly training for inter-object reasoning. We present a novel framework that constructs a hierarchical language-distilled Gaussian scene and its 3D semantic scene graph without scene-specific training. A Gaussian pruning mechanism refines scene geometry, while a robust multi-view language alignment strategy aggregates noisy 2D features into accurate 3D object embeddings. On top of this hierarchy, we build an open-vocabulary 3D scene graph with Vision Language-derived annotations and Graph Neural Network-based relational reasoning. Our approach enables efficient and scalable open-vocabulary 3D reasoning by jointly modeling hierarchical semantics and inter/intra-object relationships, validated across tasks including open-vocabulary segmentation, scene graph generation, and relation-guided retrieval.
-  </p>
+<!-- =====================================================
+     TEASER VIDEO
+===================================================== -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4" type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <strong>ReLaGS</strong> enables structural and relational reasoning
+        over 3D Gaussian Splatting scenes using open-vocabulary language queries &mdash; no scene-specific training required.
+      </h2>
+    </div>
+  </div>
+</section>
 
-  <hr class="divider" />
 
-  <!-- BibTeX -->
-  <p class="section-label">Citation</p>
-  <pre>@inproceedings{xiearafa2026relags,
+<!-- =====================================================
+     ABSTRACT & PIPELINE
+===================================================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Achieving unified 3D perception and reasoning across tasks such as segmentation, retrieval,
+            and relation understanding remains challenging, as existing methods are either object-centric
+            or rely on costly training for inter-object reasoning.
+          </p>
+          <p>
+            We present a novel framework that constructs a hierarchical language-distilled Gaussian scene
+            and its 3D semantic scene graph without scene-specific training. A Gaussian pruning mechanism
+            refines scene geometry, while a robust multi-view language alignment strategy aggregates noisy
+            2D features into accurate 3D object embeddings. On top of this hierarchy, we build an
+            open-vocabulary 3D scene graph with Vision Language-derived annotations and Graph Neural
+            Network-based relational reasoning.
+          </p>
+          <p>
+            Our approach enables efficient and scalable open-vocabulary 3D reasoning by jointly modeling
+            hierarchical semantics and inter/intra-object relationships, validated across tasks including
+            open-vocabulary segmentation, scene graph generation, and relation-guided retrieval.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-2">Pipeline</h2>
+        <div class="pipeline-figure">
+          <img src="./static/images/pipeline.png" alt="ReLaGS Pipeline" style="width:100%; margin-left:10px;">
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            <strong>ReLaGS Overview.</strong> Given a reconstructed Gaussian scene, redundant primitives
+            are first pruned to improve geometric accuracy. Heuristic clustering under multi-level SAM
+            supervision then forms a hierarchical scene structure, where each cluster is assigned a
+            CLIP-based language feature with outlier rejection. Finally, open-vocabulary inter- and
+            intra-object scene graphs are obtained either by lifting LLM-derived relations for semantic
+            diversity or by using a pretrained graph network for efficient offline inference.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =====================================================
+     QUALITATIVE RESULTS
+===================================================== -->
+<section class="comparison-section" id="results-tabs-section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered has-text-centered" style="margin-bottom:1rem">
+      <div class="column">
+        <h2 class="section-heading">Qualitative Results</h2>
+      </div>
+    </div>
+
+    <!-- Category toggle -->
+    <div class="results-category-bar">
+      <button class="cat-btn active" data-cat="structural">Structural queries</button>
+      <button class="cat-btn"        data-cat="relational">Relational queries</button>
+    </div>
+
+
+    <!-- ===== STRUCTURAL ===== -->
+    <div class="cat-panel" id="cat-structural">
+
+      <div class="columns is-centered">
+        <div class="column is-full has-text-centered">
+          <p class="section-subheading">
+            We evaluate open-vocabulary retrieval on fine-grained and part-level queries.
+            For multi-instance queries, OpenGaussian retrieves only a subset of instances while
+            THGS and ReLaGS both recover the full set. The key distinction emerges on part-level
+            queries &mdash; &ldquo;pirate hat&rdquo; and &ldquo;kamaboko&rdquo; &mdash; where all
+            baselines fail entirely and only ReLaGS succeeds.
+          </p>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-pip success"></div> correct</div>
+        <div class="legend-item"><div class="legend-pip partial"></div> partial / incomplete</div>
+        <div class="legend-item"><div class="legend-pip fail"></div>    miss / wrong</div>
+      </div>
+
+      <div class="scene-toggle-bar">
+        <button class="scene-btn active" data-cat="structural" data-scene="s1">Scene 1 &mdash; figurines</button>
+        <button class="scene-btn"        data-cat="structural" data-scene="s2">Scene 2 &mdash; ramen</button>
+      </div>
+
+      <!-- Structural Scene 1 -->
+      <div class="scene-block" id="structural-s1">
+        <div class="scene-block-header">
+          <div class="dot"></div>
+          <span class="scene-title">Scene 1 &mdash; figurines</span>
+        </div>
+        <div class="scene-original-row">
+          <p class="scene-panel-label">Original scene</p>
+          <div class="scene-original-video">
+            <video autoplay loop muted playsinline>
+              <source src="static/videos/figurines_original.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+
+        <div class="query-row">
+          <div class="query-meta">
+            <span class="query-chip">Q1</span>
+            <div>
+              <div class="query-label">&ldquo;rubber duck&rdquo;</div>
+              <div class="query-note">two instances present in the scene</div>
+            </div>
+          </div>
+          <div class="methods-grid">
+            <div class="method-cell">
+              <div class="result-box partial">
+                <video autoplay loop muted playsinline><source src="static/videos/rubber_duck_openGS.mp4" type="video/mp4"></video>
+                <span class="status-badge partial">1 of 2</span>
+              </div>
+              <span class="method-name">OpenGaussian</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/rubber_duck_thgs.mp4" type="video/mp4"></video>
+                <span class="status-badge success">2 of 2</span>
+              </div>
+              <span class="method-name">THGS</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/rubber_duck_ours.mp4" type="video/mp4"></video>
+                <span class="status-badge success">2 of 2</span>
+              </div>
+              <span class="method-name ours">ReLaGS (ours)</span>
+            </div>
+          </div>
+        </div><!-- /Q1 -->
+
+        <div class="query-row">
+          <div class="query-meta">
+            <span class="query-chip">Q2</span>
+            <div>
+              <div class="query-label">&ldquo;pirate hat&rdquo;</div>
+              <div class="query-note">small part-level object on figurine</div>
+            </div>
+          </div>
+          <div class="methods-grid">
+            <div class="method-cell">
+              <div class="result-box empty"><span class="status-badge empty">no result</span></div>
+              <span class="method-name">OpenGaussian</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box empty"><span class="status-badge empty">no result</span></div>
+              <span class="method-name">THGS</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/pirate_hat_ours.mp4" type="video/mp4"></video>
+                <span class="status-badge success">correct</span>
+              </div>
+              <span class="method-name ours">ReLaGS (ours)</span>
+            </div>
+          </div>
+        </div><!-- /Q2 -->
+
+      </div><!-- /structural-s1 -->
+
+      <!-- Structural Scene 2 -->
+      <div class="scene-block scene-hidden" id="structural-s2">
+        <div class="scene-block-header">
+          <div class="dot"></div>
+          <span class="scene-title">Scene 2 &mdash; ramen</span>
+        </div>
+        <div class="scene-original-row">
+          <p class="scene-panel-label">Original scene</p>
+          <div class="scene-original-video">
+            <video autoplay loop muted playsinline>
+              <source src="static/videos/ramen_original.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+
+        <div class="query-row">
+          <div class="query-meta">
+            <span class="query-chip">Q1</span>
+            <div>
+              <div class="query-label">&ldquo;egg&rdquo;</div>
+              <div class="query-note">two instances present in the scene</div>
+            </div>
+          </div>
+          <div class="methods-grid">
+            <div class="method-cell">
+              <div class="result-box partial">
+                <video autoplay loop muted playsinline><source src="static/videos/eggs_openGS.mp4" type="video/mp4"></video>
+                <span class="status-badge partial">1 of 2</span>
+              </div>
+              <span class="method-name">OpenGaussian</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/eggs_thgs.mp4" type="video/mp4"></video>
+                <span class="status-badge success">2 of 2</span>
+              </div>
+              <span class="method-name">THGS</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/eggs_ours.mp4" type="video/mp4"></video>
+                <span class="status-badge success">2 of 2</span>
+              </div>
+              <span class="method-name ours">ReLaGS (ours)</span>
+            </div>
+          </div>
+        </div><!-- /Q1 -->
+
+        <div class="query-row">
+          <div class="query-meta">
+            <span class="query-chip">Q2</span>
+            <div>
+              <div class="query-label">&ldquo;kamaboko&rdquo;</div>
+              <div class="query-note">fine-grained ramen topping; others confuse with nearby ingredients</div>
+            </div>
+          </div>
+          <div class="methods-grid">
+            <div class="method-cell">
+              <div class="result-box fail">
+                <video autoplay loop muted playsinline><source src="static/videos/kamaboko_openGS.mp4" type="video/mp4"></video>
+                <span class="status-badge fail">wrong</span>
+              </div>
+              <span class="method-name">OpenGaussian</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box fail">
+                <video autoplay loop muted playsinline><source src="static/videos/kamaboko_thgs.mp4" type="video/mp4"></video>
+                <span class="status-badge fail">wrong</span>
+              </div>
+              <span class="method-name">THGS</span>
+            </div>
+            <div class="method-cell">
+              <div class="result-box success">
+                <video autoplay loop muted playsinline><source src="static/videos/kamaboko_ours.mp4" type="video/mp4"></video>
+                <span class="status-badge success">correct</span>
+              </div>
+              <span class="method-name ours">ReLaGS (ours)</span>
+            </div>
+          </div>
+        </div><!-- /Q2 -->
+
+      </div><!-- /structural-s2 -->
+
+    </div><!-- /cat-structural -->
+
+
+    <!-- ===== RELATIONAL ===== -->
+    <div class="cat-panel cat-hidden" id="cat-relational">
+      <div class="container is-max-desktop">
+
+        <div class="columns is-centered">
+          <div class="column is-full has-text-centered">
+            <p class="section-subheading">
+              We evaluate relational queries that require understanding spatial relationships between
+              objects. In the disambiguation scene, both queries differ only in their relational context
+              &mdash; ReLaGS correctly retrieves a different towel for each query, while THGS ignores
+              the relation and returns the same object both times. In the general scene, THGS either
+              conflates objects with their surroundings or returns nothing meaningful, while
+              RelationField&rsquo;s voxel-based activations highlight only a partial region of the correct object.
+            </p>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-pip success"></div> correct</div>
+          <div class="legend-item"><div class="legend-pip partial"></div> partial / incomplete</div>
+          <div class="legend-item"><div class="legend-pip fail"></div>    miss / wrong</div>
+        </div>
+
+        <div class="scene-toggle-bar">
+          <button class="scene-btn active" data-cat="relational" data-scene="s1">Scene 1 &mdash; bathroom</button>
+          <button class="scene-btn"        data-cat="relational" data-scene="s2">Scene 2 &mdash; office</button>
+        </div>
+
+        <!-- Relational Scene 1 -->
+        <div class="scene-block" id="relational-s1">
+          <div class="scene-block-header">
+            <div class="dot"></div>
+            <span class="scene-title">Scene 1 &mdash; bathroom &nbsp;&middot;&nbsp; object disambiguation</span>
+          </div>
+          <div class="scene-original-row">
+            <p class="scene-panel-label">Original scene</p>
+            <div class="scene-original-video">
+              <video autoplay loop muted playsinline>
+                <source src="static/videos/bathroom_original.mp4" type="video/mp4">
+              </video>
+            </div>
+            <p style="font-size:0.78rem; color:#b5b5b5; text-align:center; margin:0.4rem 0 0; font-style:italic;">
+              Two towels present. Each query should retrieve a <em>different</em> one.
+            </p>
+          </div>
+
+          <div class="query-row">
+            <div class="query-meta">
+              <span class="query-chip">Q1</span>
+              <div>
+                <div class="query-label">&ldquo;towel hanging on wall&rdquo;</div>
+                <div class="query-note">expected: towel A</div>
+              </div>
+            </div>
+            <div class="methods-grid-2col">
+              <div class="method-cell">
+                <div class="result-box success">
+                  <video autoplay loop muted playsinline><source src="static/videos/towel_hanging_on_wall_thgs.mp4" type="video/mp4"></video>
+                  <span class="status-badge success">towel A &#x2713;</span>
+                </div>
+                <span class="method-name">THGS</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box success">
+                  <video autoplay loop muted playsinline><source src="static/videos/towel_hanging_on_wall_ours.mp4" type="video/mp4"></video>
+                  <span class="status-badge success">towel A &#x2713;</span>
+                </div>
+                <span class="method-name ours">ReLaGS (ours)</span>
+              </div>
+            </div>
+          </div><!-- /Q1 -->
+
+          <div class="query-row">
+            <div class="query-meta">
+              <span class="query-chip">Q2</span>
+              <div>
+                <div class="query-label">&ldquo;towel hanging on bathroom cabinet&rdquo;</div>
+                <div class="query-note">expected: towel B &mdash; THGS returns the same towel as Q1</div>
+              </div>
+            </div>
+            <div class="methods-grid-2col">
+              <div class="method-cell">
+                <div class="result-box fail">
+                  <video autoplay loop muted playsinline><source src="static/videos/towel_hanging_on_bathroom_cabinet_thgs.mp4" type="video/mp4"></video>
+                  <span class="status-badge fail">same as Q1</span>
+                </div>
+                <span class="method-name">THGS</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box success">
+                  <video autoplay loop muted playsinline><source src="static/videos/towel_hanging_on_bathroom_cabinet_ours.mp4" type="video/mp4"></video>
+                  <span class="status-badge success">towel B &#x2713;</span>
+                </div>
+                <span class="method-name ours">ReLaGS (ours)</span>
+              </div>
+            </div>
+          </div><!-- /Q2 -->
+
+        </div><!-- /relational-s1 -->
+
+        <!-- Relational Scene 2 -->
+        <div class="scene-block scene-hidden" id="relational-s2">
+          <div class="scene-block-header">
+            <div class="dot"></div>
+            <span class="scene-title">Scene 2 &mdash; office &nbsp;&middot;&nbsp; general relational queries</span>
+          </div>
+          <div class="scene-original-row">
+            <p class="scene-panel-label">Original scene</p>
+            <div class="scene-original-video">
+              <video autoplay loop muted playsinline>
+                <source src="static/videos/monitor_original.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+          <div class="query-row">
+            <div class="query-meta">
+              <span class="query-chip">Q1</span>
+              <div>
+                <div class="query-label">&ldquo;picture hanging on wall&rdquo;</div>
+                <div class="query-note">THGS conflates picture and wall, selecting both</div>
+              </div>
+            </div>
+            <div class="methods-grid-3col">
+              <div class="method-cell">
+                <div class="result-box fail">
+                  <video autoplay loop muted playsinline><source src="static/videos/picture_thgs.mp4" type="video/mp4"></video>
+                  <span class="status-badge fail">picture + wall</span>
+                </div>
+                <span class="method-name">THGS</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box partial">
+                  <img src="static/images/picture_relationfield.png" alt="RelationField &mdash; picture hanging on wall">
+                  <span class="status-badge partial">partial region</span>
+                </div>
+                <span class="method-name">RelationField</span>
+                <span class="method-name-sub">voxel activation map</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box success">
+                  <video autoplay loop muted playsinline><source src="static/videos/picture_ours.mp4" type="video/mp4"></video>
+                  <span class="status-badge success">correct</span>
+                </div>
+                <span class="method-name ours">ReLaGS (ours)</span>
+              </div>
+            </div>
+          </div><!-- /Q1 -->
+
+          <div class="query-row">
+            <div class="query-meta">
+              <span class="query-chip">Q2</span>
+              <div>
+                <div class="query-label">&ldquo;monitor standing on desk&rdquo;</div>
+                <div class="query-note">THGS returns no meaningful selection</div>
+              </div>
+            </div>
+            <div class="methods-grid-3col">
+              <div class="method-cell">
+                <div class="result-box fail">
+                  <video autoplay loop muted playsinline><source src="static/videos/monitor_thgs.mp4" type="video/mp4"></video>
+                  <span class="status-badge fail">wrong</span>
+                </div>
+                <span class="method-name">THGS</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box partial">
+                  <img src="static/images/monitor_relationfield.png" alt="RelationField &mdash; monitor standing on desk">
+                  <span class="status-badge partial">partial region</span>
+                </div>
+                <span class="method-name">RelationField</span>
+                <span class="method-name-sub">voxel activation map</span>
+              </div>
+              <div class="method-cell">
+                <div class="result-box success">
+                  <video autoplay loop muted playsinline><source src="static/videos/monitor_ours.mp4" type="video/mp4"></video>
+                  <span class="status-badge success">correct</span>
+                </div>
+                <span class="method-name ours">ReLaGS (ours)</span>
+              </div>
+            </div>
+          </div><!-- /Q2 -->
+
+        </div><!-- /relational-s2 -->
+
+      </div><!-- /container (relational) -->
+    </div><!-- /cat-relational -->
+
+  </div><!-- /container (tabs) -->
+</section><!-- /results-tabs-section -->
+
+
+<!-- =====================================================
+     RUNTIME & RESOURCE COMPARISON
+===================================================== -->
+<section class="section" id="runtime">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Runtime &amp; Resource Comparison</h2>
+        <p class="section-subheading" style="margin-bottom:2rem;">
+          We compare resource usage against RelationField &mdash; the closest method to ours in capability.
+          ReLaGS injects structured semantic representation into a Gaussian scene with
+          <strong>less than 25% memory overhead</strong>, while being substantially faster
+          to train and leaner on disk.
+        </p>
+      </div>
+    </div>
+
+    <div class="runtime-layout">
+      <div class="runtime-chart-wrap">
+        <canvas id="runtimeChart"></canvas>
+      </div>
+      <div class="runtime-cards">
+
+        <div class="runtime-card">
+          <div class="runtime-card-icon">&#x23F1;</div>
+          <div class="runtime-card-body">
+            <div class="runtime-card-label">Training time</div>
+            <div class="runtime-card-values">
+              <span class="runtime-val ours">ReLaGS &ndash; 12.6 min</span>
+              <span class="runtime-val baseline">RelationField &ndash; 60 min</span>
+            </div>
+            <div class="runtime-card-note" id="note-time"></div>
+          </div>
+        </div>
+
+        <div class="runtime-card">
+          <div class="runtime-card-icon">&#x1F4BE;</div>
+          <div class="runtime-card-body">
+            <div class="runtime-card-label">Disk storage</div>
+            <div class="runtime-card-values">
+              <span class="runtime-val ours">ReLaGS &ndash; 65 MB</span>
+              <span class="runtime-val baseline">RelationField &ndash; 500 MB</span>
+            </div>
+            <div class="runtime-card-note" id="note-disk"></div>
+          </div>
+        </div>
+
+        <div class="runtime-card">
+          <div class="runtime-card-icon">&#x1F5A5;</div>
+          <div class="runtime-card-body">
+            <div class="runtime-card-label">GPU memory</div>
+            <div class="runtime-card-values">
+              <span class="runtime-val ours">ReLaGS &ndash; 7.5 GB</span>
+              <span class="runtime-val baseline">RelationField &ndash; 32 GB</span>
+            </div>
+            <div class="runtime-card-note" id="note-gpu"></div>
+          </div>
+        </div>
+
+      </div><!-- /runtime-cards -->
+    </div><!-- /runtime-layout -->
+
+    <p class="runtime-footnote">
+      * Values from Tab. 7. Resource usage is decomposed across the three stages of ReLaGS.
+      Ablation studies on GNN design, pruning quality, and scene graph prediction are in the appendix.
+    </p>
+
+  </div>
+</section>
+
+<!-- =====================================================
+  ACKNOWLEDGEMENTS
+===================================================== -->
+<section class="section" id="acknowledgements">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Acknowledgements</h2>
+    <p>
+       This work has been partially funded by the EU projects dAIEDGE (GA Nr 101120726) and LUMINOUS (GA Nr 101135724).
+    </p>
+  </div>
+</section>
+
+
+<!-- =====================================================
+     BIBTEX
+===================================================== -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{xiearafa2026relags,
   title     = {ReLaGS: Relational Language Gaussian Splatting},
   author    = {Xie, Yaxu and Arafa, Abdalla and Javanmardi, Alireza and
                Millerdurai, Christen and Hu, Jia Cheng and Wang, Shaoxiang and
                Pagani, Alain and Stricker, Didier},
   booktitle = {CVPR},
   year      = {2026}
-}</pre>
-
-<hr class="divider" />
-
-  <!-- Acknowledgements -->
-  <p class="section-label">Acknowledgements</p>
-  <p class="abstract-text">
-    This work has been partially funded by the EU projects dAIEDGE (GA Nr 101120726) and LUMINOUS (GA Nr 101135724).
-  </p>
+}</code></pre>
+  </div>
+</section>
 
 
-
-</main>
-
-<footer>
-  ReLaGS &middot; CVPR 2026
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://arxiv.org/abs/2603.17605">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link external-link" href="https://abdallaarafa.github.io/">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>Our project page is built upon <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> 
+            and <a href="https://dfki-av.github.io/inpaint360gs/">Inpaint360GS</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>
+
 
 </body>
 </html>
