@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="MVFGA: Multi-View Face and Gesture Animation with Dynamic Gaussians.">
+  <meta name="keywords" content="MVFGA, multi-view avatar, face animation, gesture animation, dynamic Gaussians, Gaussian avatar">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="MVFGA: Multi-View Face and Gesture Animation with Dynamic Gaussians">
+  <meta property="og:description" content="Project page for MVFGA, a multi-view upper-body avatar animation method with dynamic Gaussians.">
+  <title>MVFGA: Multi-View Face and Gesture Animation with Dynamic Gaussians</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    .publication-title,
+    .publication-authors,
+    .section-title {
+      font-family: "Google Sans", "Noto Sans", sans-serif;
+    }
+
+    .publication-title {
+      line-height: 1.1;
+      font-size: 2.75rem !important;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .title-logo {
+      width: 8.25rem;
+      max-width: 22vw;
+      height: auto;
+      flex: 0 0 auto;
+    }
+
+    .title-row .publication-title {
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .publication-authors {
+      margin-top: 0.75rem;
+    }
+
+    .author-block {
+      display: inline-block;
+    }
+
+    .author-block a {
+      color: hsl(204, 86%, 53%) !important;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .author-block a:hover {
+      text-decoration: underline;
+    }
+
+    .equal-contribution {
+      font-size: 0.9rem;
+      margin-top: 0.35rem;
+    }
+
+    .publication-links {
+      margin-top: 1.25rem;
+    }
+
+    .tldr-text {
+      font-family: "Google Sans", "Noto Sans", sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .media-frame {
+      width: 100%;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: block;
+    }
+
+    .pipeline-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .pipeline-card h3 {
+      font-family: "Google Sans", "Noto Sans", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .pipeline-figure img {
+      width: 100%;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: block;
+    }
+
+    .caption {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      margin-top: 0.9rem;
+    }
+
+    .result-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .result-card video {
+      width: 100%;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: block;
+    }
+
+    .result-card h3 {
+      font-family: "Google Sans", "Noto Sans", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-top: 0.75rem;
+    }
+
+    .footer {
+      padding: 2rem 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .publication-title {
+        font-size: 1.95rem !important;
+      }
+
+      .title-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .title-logo {
+        width: 7.25rem;
+      }
+
+      .title-row .publication-title {
+        text-align: center;
+      }
+
+      .tldr-text {
+        font-size: 1rem;
+      }
+
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://dfki-av.github.io/">
+        <span class="icon"><i class="fas fa-home"></i></span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <div class="title-row">
+            <img class="title-logo" src="./static/images/logo.png" alt="MVFGA logo">
+            <h1 class="title is-1 publication-title">
+              MVFGA: Multi-View Face and Gesture Animation with Dynamic Gaussians
+            </h1>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://ajavanmardii.github.io/" target="_blank" rel="noopener noreferrer">Alireza Javanmardi</a><sup>1*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/vippin-kumar/" target="_blank" rel="noopener noreferrer">Vippin Kumar Jeetmal</a><sup>2*</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://chris10m.github.io/" target="_blank" rel="noopener noreferrer">Christen Millerdurai</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://alainpagani.github.io/" target="_blank" rel="noopener noreferrer">Alain Pagani</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://av.dfki.de/members/stricker/" target="_blank" rel="noopener noreferrer">Didier Stricker</a><sup>1,2</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>German Research Center for Artificial Intelligence (DFKI),</span>
+            <span class="author-block"><sup>2</sup>RPTU Kaiserslautern-Landau</span>
+          </div>
+
+          <div class="publication-authors equal-contribution">
+            <span class="author-block"><sup>*</sup> Equal contribution</span>
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="https://dfki-av.github.io/MVFGA/" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://dfki-av.github.io/MVFGA/" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code (coming soon)</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://huggingface.co/datasets/arjavanmardi/MVFGA" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-database"></i></span>
+                <span>Dataset</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body has-text-centered">
+      <!--
+      <p class="has-text-centered" style="margin-bottom: 1.25rem;">
+        <span class="tldr-text">
+          <strong>TL;DR:</strong> MVFGA reconstructs animatable upper-body avatars from multi-view data and renders
+          geometry-consistent novel views with dynamic Gaussians for expressive face and gesture animation.
+        </span>
+      </p>
+      -->
+
+      <video id="teaser" class="media-frame" autoplay muted loop playsinline controls>
+        <source src="./static/videos/teaser.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 section-title">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Creating photorealistic 3D human avatars with realistic upper-body motion remains challenging.
+            Existing approaches either focus on the head and overlook hand gestures, or reconstruct the full
+            body but fail to preserve fine-grained facial fidelity and hand pose accuracy. As a result,
+            current methods struggle to capture the subtle dynamics of facial expressions and hand gestures
+            that are crucial for natural human communication.
+          </p>
+          <p>
+            To address these limitations, we propose MVFGA, a multi-view-consistent pipeline for generating
+            realistic upper-body avatars. Our approach models the face and hands separately and fuses them
+            with a parametric upper-body mesh model, enabling fine-grained facial expression capture and
+            accurate hand articulation. We then splat 3D Gaussians onto the obtained mesh, enabling
+            high-quality rendering of dynamic avatars from novel viewpoints.
+          </p>
+          <p>
+            We also introduce MVFGA-MoCap, a multi-view upper-body motion capture dataset featuring
+            controlled facial expression sequences, diverse hand gestures, and free-form communication.
+            Experiments show that MVFGA generates visually realistic avatars with high-fidelity facial
+            expressions and hand motions, outperforming baselines for upper-body avatar animation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Pipelines</h2>
+    <div class="pipeline-grid">
+      <!--
+      <div class="pipeline-card">
+        <h3>Upper-body Mesh Generation</h3>
+        <figure class="pipeline-figure">
+          <img src="./static/images/pipe1.png" alt="Upper-body mesh generation pipeline">
+          <figcaption class="content has-text-justified caption">
+            We extract keypoints, segment body parts, apply background matting, refine face and hand fitting,
+            and fuse face, hand, and body parameters into an accurate upper-body representation.
+          </figcaption>
+        </figure>
+      </div>
+      -->
+
+      <div class="pipeline-card">
+        <h3>Avatar Synthesis</h3>
+        <figure class="pipeline-figure">
+          <img src="./static/images/pipe2.png" alt="Avatar synthesis pipeline">
+          <figcaption class="content has-text-justified caption">
+            Given multi-view images and upper-body parameters, we pose the template mesh, assign 3D Gaussians
+            to its triangles, rasterize rendered images, and optimize them with RGB reconstruction and adaptive
+            density control.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered section-title">Results</h2>
+    <div class="result-grid">
+      <div class="result-card has-text-centered">
+        <video autoplay muted loop playsinline controls>
+          <source src="./static/videos/comparison.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h3>Comparison</h3>
+      </div>
+
+      <div class="result-card has-text-centered">
+        <video autoplay muted loop playsinline controls>
+          <source src="./static/videos/novel_view.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h3>Novel View</h3>
+      </div>
+
+      <div class="result-card has-text-centered">
+        <video autoplay muted loop playsinline controls>
+          <source src="./static/videos/cross.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <h3>Cross-subject Animation</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="acknowledgements">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-4">Acknowledgements</h2>
+    <p>
+    This work was partially funded by the Horizon Europe programme under the project IRIS-XR, Grant Agreement No. 101298672.
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This website template is based on the Nerfies project page and is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+              Creative Commons Attribution-ShareAlike 4.0 International License
+            </a>.
+          </p>
+          <p>
+            The original source code is available
+            <a href="https://github.com/nerfies/nerfies.github.io">here</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
